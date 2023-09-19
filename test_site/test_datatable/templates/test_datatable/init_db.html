@@ -16,70 +16,77 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 </head>
 <body>
-    <h1 class="header">Данные из БД</h1>
-
     <!-- Элемент для анимации загрузки -->
-    <div id="loading" class="loading">Загрузка данных...</div>
-
+    <div class="loader-container">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+    </div>
 
     <!-- Таблица для данных -->
-    <table id="data-table" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>ФИО пациента</th>
-                <th>Дата рождения</th>
-                <th>Идентификатор исследования</th>
-                <th>Дата и время исследования</th>
-                <th>Модальность исследования</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for study in studies %}
+    <div id="table-container" style="display: none;">
+        <h1 class="header">Данные из БД</h1>
+        <table id="data-table" class="display" style="width:100%">
+            <thead>
                 <tr>
-                    <td>{{ study.patient_fio }}</td>
-                    <td>{{ study.patient_birthdate }}</td>
-                    <td>{{ study.study_uid }}</td>
-                    <td>{{ study.study_date }}</td>
-                    <td>{{ study.study_modality.name }}</td>
+                    <th>ФИО пациента</th>
+                    <th>Дата рождения</th>
+                    <th>Идентификатор исследования</th>
+                    <th>Дата и время исследования</th>
+                    <th>Модальность исследования</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for study in studies %}
+                    <tr>
+                        <td>{{ study.patient_fio }}</td>
+                        <td>{{ study.patient_birthdate }}</td>
+                        <td>{{ study.study_uid }}</td>
+                        <td>{{ study.study_date }}</td>
+                        <td>{{ study.study_modality.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <!-- Скрипт для анимации загрузки данных и DataTables -->
     <script>
-$(document).ready(function() {
-    // Показать анимацию загрузки при инициализации DataTables
-    $('#loading').show();
+        $(document).ready(function() {
+            // Скрыть контейнер таблицы перед инициализацией DataTables
+            $('#table-container').hide();
 
-    $('#data-table').DataTable({
-        paging: true,
-        searching: true,
-        ordering: true,
-        lengthMenu: [10, 25, 50, 100],
-        pageLength: 10,  // Количество записей на одной странице по умолчанию
-        language: {
-            search: "Поиск:",
-            lengthMenu: "Показать _MENU_ записей на странице",
-            info: "Показано с _START_ по _END_ из _TOTAL_ записей",
-            infoEmpty: "Показано с 0 по 0 из 0 записей",
-            zeroRecords: "Записи не найдены",
-            infoFiltered: "(фильтр из _MAX_ записей)",
-            paginate: {
-                first: "Первая",
-                previous: "Предыдущая",
-                next: "Следующая",
-                last: "Последняя"
-            }
-        },
-        // Обработка события инициализации DataTables
-        "initComplete": function(settings, json) {
-            // Скрыть анимацию загрузки после загрузки данных
-            $('#loading').hide();
-        }
-    });
-});
-
+            // Инициализация DataTables
+            var dataTable = $('#data-table').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                lengthMenu: [10, 25, 50, 100],
+                pageLength: 10,  // Количество записей на одной странице по умолчанию
+                language: {
+                    search: "Поиск:",
+                    lengthMenu: "Показать _MENU_ записей на странице",
+                    info: "Показано с _START_ по _END_ из _TOTAL_ записей",
+                    infoEmpty: "Показано с 0 по 0 из 0 записей",
+                    zeroRecords: "Записи не найдены",
+                    infoFiltered: "(фильтр из _MAX_ записей)",
+                    paginate: {
+                        first: "Первая",
+                        previous: "Предыдущая",
+                        next: "Следующая",
+                        last: "Последняя"
+                    }
+                },
+                initComplete: function(settings, json) {
+                    // Отобразить контейнер таблицы после инициализации DataTables
+                    $('#table-container').show();
+                    // Скрыть анимацию загрузки после инициализации DataTables
+                    $('.loader-container').hide();
+                }
+            });
+        });
     </script>
 </body>
 </html>
